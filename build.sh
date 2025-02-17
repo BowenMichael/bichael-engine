@@ -20,7 +20,7 @@ cd $BUILD_DIR
 cmake ..
 
 # Build the project using Make
-make -j$(nproc)  
+make -j$(nproc)
 
 # Check if build was successful
 if [ $? -eq 0 ]; then
