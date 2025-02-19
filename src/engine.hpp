@@ -1,10 +1,19 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
+#include "util/defs.hpp"
 #include <chrono>
+
+class SDL_Window;
+class SDL_Renderer;
+
 namespace BE {
 const double FRAME_RATE = 60.0;
 const double INV_FRAME_RATE = 1.0 / FRAME_RATE;
+
+namespace Managers {
+class RenderingManager;
+}
 
 class Engine {
 public:
@@ -23,7 +32,9 @@ private:
 
 private:
   bool m_isRunning;
-  std::chrono::time_point<std::chrono::high_resolution_clock> start;
+  long frame = 0;
+  std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
+  Ptr<Managers::RenderingManager> mp_rendering_manager;
 };
 } // namespace BE
 

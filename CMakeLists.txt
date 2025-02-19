@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # check if the CMAKE_PROJECT_NAME is set otherwise fail
 if(NOT DEFINED CMAKE_PROJECT_NAME)
-    message(FATAL_ERROR "CMAKE_PROJECT_NAME is not set")
+    message("CMAKE_PROJECT_NAME is not set")
     set(CMAKE_PROJECT_NAME "bichael_engine")
 endif()
 
@@ -23,6 +23,9 @@ find_package(SDL3 REQUIRED)
 
 # Search for header files in src/ directory
 include_directories(src)
+
+# include configuration file
+include_directories(${PROJECT_BINARY_DIR})
 
 # Search the src/ directory for .cpp and .c files and store paths in SOURCES
 file(GLOB_RECURSE SOURCES "src/*.c*" main.cpp)

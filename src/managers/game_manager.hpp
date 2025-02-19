@@ -1,4 +1,7 @@
-#pragma once
+#ifndef __GAME_MANAGER_H__
+#define __GAME_MANAGER_H__
+
+#include "../util/defs.hpp"
 
 namespace BE {
 namespace Managers {
@@ -17,10 +20,13 @@ public:
 
   void cleanup();
 
-  bool isRunning() const;
+  // singleton pattern
+  static GameManager *getInstance();
+  static void initInstance();
+  static void cleanupInstance();
 
 private:
-  bool m_isRunning;
 };
 } // namespace Managers
 } // namespace BE
+#endif // __GAME_MANAGER_H__

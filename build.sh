@@ -11,13 +11,14 @@ fi
 
 # export project name as environment variable
 export CMAKE_PROJECT_NAME=$PROJECT_NAME
+export CMAKE_BUILD_TYPE=$BUILD_TYPE
 
 # Create and move into the build directory
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
 # Run CMake to generate build files
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE 
 
 # Build the project using Make
 make -j$(nproc)

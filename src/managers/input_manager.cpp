@@ -2,6 +2,8 @@
 
 #include "input_manager.hpp"
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_scancode.h>
 #include <cstdio>
 
@@ -28,46 +30,30 @@ void InputManager::cleanupInstance() {
 }
 
 void InputManager::init() {
-  //
+  // get the current state of the keyboard
+  mp_keyborad_state = SDL_GetKeyboardState(NULL);
 }
 
-void InputManager::run() {
-  // call get key state for the escape key
-  if (getKeyState(SDL_SCANCODE_W)) {
-    // call stop on the game manager
-    // stop();
-  }
-}
+void InputManager::run() {}
 
-bool InputManager::getKeyState(SDL_Scancode key) const {
+bool InputManager::getKeyState(SDL_Scancode key) {
 
-  // print the key
-  printf("Key: %d\n", key);
-
-  // Get the state of the key using sdl3
-
-  int *length;
-
-  const bool *state = SDL_GetKeyboardState(length);
-
-  // print the length of the state
-  printf("Length: %d\n", *length);
-
-  // loop over state for length if state at index is true print the index
-  for (int i = 0; i < *length; i++) {
-    if (state[i]) {
-      printf("Key: %d\n", i);
-    }
+  if (mp_keyborad_state[key]) {
+    m_last_key_pressed = key;
   }
 
-  printf(state[key] ? "true" : "false");
-  printf("\n");
-  return state[key];
+  return (bool)mp_keyborad_state[key];
 }
 
-bool InputManager::getKeyState(SDL_Scancode key, int state) const {}
+bool InputManager::getKeyStateDown(SDL_Scancode key) {
+  if (m_last_key_pressed == key) {
+    return true;
+  }
+  return false;
+}
 
-bool InputManager::getMouseState(int button) const {}
+bool InputManager::getMouseState(int button) const {
+  return SDL_BUTTON_MASK(button) & SDL_GetMouseState(NULL, NULL);
+}
 
-bool InputManager::getMouseState(int button, int state) const {}
 } // namespace BE::Managers
