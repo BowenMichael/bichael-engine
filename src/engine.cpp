@@ -1,9 +1,11 @@
 #include "engine.hpp"
+#include "../build/version.h"
+#include "components/renderer.hpp"
 #include "managers/game_manager.hpp"
 #include "managers/input_manager.hpp"
 #include "managers/rendering_manager.hpp"
+#include "objects/object.hpp"
 #include "util/defs.hpp"
-#include "version.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_init.h>
@@ -21,7 +23,7 @@ namespace BE {
 
 #define WIDTH 800
 #define HEIGHT 600
-Engine::Engine() : m_isRunning(true), mp_rendering_manager(nullptr) {}
+Engine::Engine() : m_isRunning(true) {}
 
 Engine::~Engine() {}
 
@@ -36,8 +38,8 @@ void Engine::init() {
     SDL_SetLogPriorities(SDL_LOG_PRIORITY_DEBUG);
 
   // init rendering manager
-  mp_rendering_manager = MakePtr<Managers::RenderingManager>();
-  mp_rendering_manager.get()->init(WIDTH, HEIGHT);
+  Managers::RenderingManager::initInstance();
+  Managers::RenderingManager::getInstance()->init(WIDTH, HEIGHT);
 
   // init input manager
   Managers::InputManager::initInstance();
@@ -60,6 +62,8 @@ void Engine::run() {
     if (event.type == SDL_EVENT_MOUSE_MOTION) {
       SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Mouse moved");
       SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "We got a motion event.");
+      SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "The mouse moved to %d, %d",
+                   event.motion.x, event.motion.y);
     }
 
     // check for input events
@@ -80,13 +84,27 @@ void Engine::run() {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Event type: %d", event.type);
   }
 
+  // run input manager
+  Managers::InputManager::getInstance()->run();
+
   // print mouse state of left button
 
   if (Managers::InputManager::getInstance()->getMouseState(SDL_BUTTON_LEFT)) {
     SDL_Log("Left mouse button pressed");
 
+    // get mouse position
+    std::array<float, 2> mousePos =
+        Managers::InputManager::getInstance()->getMousePosition();
+    SDL_Log("Mouse position: %f, %f", mousePos[0], mousePos[1]);
+
     // TODO: add object
-    Managers::GameManager::getInstance()->addObject();
+    Objects::Object *obj =
+        Managers::GameManager::getInstance()
+            ->addObject(Objects::Object(
+                "object", (float[3]){mousePos[0], mousePos[1], 0.0f}))
+            .get();
+
+    std::cout << "Object Created\n";
   }
 
   // print done polling events
@@ -96,7 +114,7 @@ void Engine::run() {
   SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Done getting key state");
 
   // render
-  mp_rendering_manager->render();
+  Managers::RenderingManager::getInstance()->render();
 
   // handle loop timing
   handleLoopTiming();
@@ -118,7 +136,7 @@ void Engine::cleanup() {
   Managers::InputManager::cleanupInstance();
 
   // cleanup rendering manager
-  mp_rendering_manager->cleanup();
+  Managers::RenderingManager::cleanupInstance();
 }
 bool Engine::isRunning() const { return m_isRunning; }
 

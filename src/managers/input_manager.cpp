@@ -56,4 +56,9 @@ bool InputManager::getMouseState(int button) const {
   return SDL_BUTTON_MASK(button) & SDL_GetMouseState(NULL, NULL);
 }
 
+std::array<float, 2> InputManager::getMousePosition() {
+  SDL_GetMouseState(&m_mouse_pos[0], &m_mouse_pos[1]);
+  return m_mouse_pos;
+}
+
 } // namespace BE::Managers

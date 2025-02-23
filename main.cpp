@@ -1,9 +1,8 @@
 #include <SDL3/SDL_init.h>
 #include <iostream>
-#include <sstream>
 
-#include "engine.hpp"
-#include "version.h" // Ensure this file exists and is in the correct include path
+#include "build/version.h" // Ensure this file exists and is in the correct include path
+#include "src/engine.hpp"
 
 int main(int argc, char *argv[]) {
   std::cout << "Hello World\n";

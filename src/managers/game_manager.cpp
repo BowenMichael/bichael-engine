@@ -1,4 +1,6 @@
 #include "game_manager.hpp"
+#include "../components/renderer.hpp"
+#include "../objects/object.hpp"
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_scancode.h>
 #include <cassert>
@@ -46,6 +48,27 @@ void GameManager::initInstance() {
 }
 
 void GameManager::cleanupInstance() { smp_instance->cleanup(); }
+
+Ptr<Objects::Object> GameManager::addObject(const Objects::Object &object) {
+  // create a new object from the copied data
+  Ptr<Objects::Object> newObject = MakePtr<Objects::Object>(object);
+
+  std::cout << "Object Created\n";
+
+  Ptr<Components::Renderer> renderer =
+      newObject->addComponent<Components::Renderer>(newObject);
+
+  std::cout << "Component Added\n";
+
+  renderer->init();
+
+  std::cout << "Component init\n";
+
+  // add the new object to the list
+  m_objects.push_back(newObject);
+
+  return newObject;
+}
 
 } // namespace Managers
 } // namespace BE

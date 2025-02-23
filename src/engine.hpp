@@ -34,7 +34,6 @@ private:
   bool m_isRunning;
   long frame = 0;
   std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
-  Ptr<Managers::RenderingManager> mp_rendering_manager;
 };
 } // namespace BE
 

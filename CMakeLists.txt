@@ -6,6 +6,9 @@ set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_STANDARD 20)  
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -frtti") # Ensure RTTI is enabled
+
+
 
 # check if the CMAKE_PROJECT_NAME is set otherwise fail
 if(NOT DEFINED CMAKE_PROJECT_NAME)
@@ -28,7 +31,7 @@ include_directories(src)
 include_directories(${PROJECT_BINARY_DIR})
 
 # Search the src/ directory for .cpp and .c files and store paths in SOURCES
-file(GLOB_RECURSE SOURCES "src/*.c*" main.cpp)
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" main.cpp)
 
 # Check if any source files were found
 if(NOT SOURCES)
@@ -44,6 +47,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-                           "${PROJECT_BINARY_DIR}" "./" "/usr/local/include/*"
+                           "${PROJECT_BINARY_DIR}" "/usr/local/include/*"
                            )
 
